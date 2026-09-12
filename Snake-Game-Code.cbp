@@ -37,9 +37,11 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="include/Rabo.h" />
+		<Unit filename="include/Knot.h" />
+		<Unit filename="include/Snake.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="src/Rabo.cpp" />
+		<Unit filename="src/Knot.cpp" />
+		<Unit filename="src/Snake.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

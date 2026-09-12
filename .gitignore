@@ -23,6 +23,14 @@
 *.dll
 *.so.*
 
+# Code::Blocks - Arquivos temporários e de layout
+*.layout
+*.depend
+
+# Pastas de saída do Code::Blocks (binários compilados)
+bin/
+obj/
+
 
 # Fortran module files
 *.mod

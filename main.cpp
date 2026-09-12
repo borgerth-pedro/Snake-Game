@@ -1,6 +1,6 @@
 #include <iostream>
 #include <raylib.h>
-#include "Rabo.h"
+#include "Knot.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ int main(void)
 
     Camera2D camera = {0};
 
-    Rabo head({0,0}, 32.0f);
+    Knot head({0,0}, 32.0f);
 
     float timeMove     = 0.0f;
     float timeMoveInterval = 0.2f;
@@ -63,6 +63,7 @@ int main(void)
             ClearBackground(RAYWHITE);
 
             DrawRectangleV(head.getPosition(), head.getSize(), GREEN);
+
             BeginMode2D(camera);
                 DrawGrid(100, 50);
             EndMode2D();
