@@ -1,6 +1,6 @@
 #include <iostream>
 #include <raylib.h>
-#include "Knot.h"
+#include "Node.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ int main(void)
 
     Camera2D camera = {0};
 
-    Knot head({0,0}, 32.0f);
+    Node head({0,0}, 32.0f);
 
     float timeMove     = 0.0f;
     float timeMoveInterval = 0.2f;

@@ -6,11 +6,15 @@ class Snake
 {
     public:
         Snake();
-        virtual ~Snake();
+        ~Snake();
 
-    protected:
+        int getSize();
+        void addNode();
+        void removeNode();
 
     private:
+        int sizeSnake;
+        int* body;
 };
 
 #endif // SNAKE_H

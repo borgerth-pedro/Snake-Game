@@ -1,6 +1,6 @@
-#include "Knot.h"
+#include "Node.h"
 
-Knot::Knot(Vector2 recPosition, float sizeRec)
+Node::Node(Vector2 recPosition, float sizeRec)
 {
     rectanglePosition = recPosition;
     speedRectangleX = 0.0f;
@@ -8,47 +8,47 @@ Knot::Knot(Vector2 recPosition, float sizeRec)
     sizeRectangle = {sizeRec, sizeRec};
 }
 
-Knot::~Knot()
+Node::~Node()
 {
     //dtor
 }
 
-float Knot::getSpeedX(){
+float Node::getSpeedX(){
     return speedRectangleX;
 }
-float Knot::getSpeedY(){
+float Node::getSpeedY(){
     return speedRectangleY;
 }
 
-void Knot::setSpeedX(float speedX){
+void Node::setSpeedX(float speedX){
     speedRectangleX = speedX;
 }
 
-void Knot::setSpeedY(float speedY){
+void Node::setSpeedY(float speedY){
     speedRectangleY = speedY;
 }
 
-Vector2 Knot::getPosition(){
+Vector2 Node::getPosition(){
     return rectanglePosition;
 }
 
-void Knot::setPosition(Vector2 recPosition){
+void Node::setPosition(Vector2 recPosition){
     rectanglePosition = recPosition;
 }
 
-Vector2 Knot::getSize(){
+Vector2 Node::getSize(){
     return sizeRectangle;
 }
 
-void Knot::setSize(Vector2 sizeRec){
+void Node::setSize(Vector2 sizeRec){
     sizeRectangle = sizeRec;
 }
 
-Knot* Knot::getProx(){
+Node* Node::getProx(){
     return prox;
 }
 
-void Knot::setProx(Knot *p){
+void Node::setProx(Node *p){
     prox = p;
 }
 

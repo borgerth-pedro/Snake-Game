@@ -14,9 +14,9 @@ Snake::~Snake()
 int Snake::getSize(){
     return sizeSnake;
 }
-void Snake::addKnot(){
+void Snake::addNode(){
 
 }
-void Snake::removeKnot(){
+void Snake::removeNode(){
 
 }
