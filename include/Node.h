@@ -20,7 +20,7 @@ class Node
         void setSize(Vector2 sizeRec);
 
         Node* getProx();
-        void setProx(Node *p);
+        void setProx(Node* p);
 
     private:
 
@@ -28,7 +28,7 @@ class Node
         float speedRectangleX;
         float speedRectangleY;
         Vector2 sizeRectangle;
-        Node* prox;
+        Node* prox = nullptr;
 };
 
 #endif // NODE_H

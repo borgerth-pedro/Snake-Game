@@ -1,6 +1,6 @@
 #ifndef SNAKE_H
 #define SNAKE_H
-
+#include "Node.h"
 
 class Snake
 {
@@ -11,10 +11,12 @@ class Snake
         int getSize();
         void addNode();
         void removeNode();
+        Node* getHead();
 
     private:
-        int sizeSnake;
-        int* body;
+        Node *headSnake = nullptr;
+        Node *tailSnake = nullptr;
+        int sizeSnake = 0;
 };
 
 #endif // SNAKE_H

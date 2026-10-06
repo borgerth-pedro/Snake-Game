@@ -2,10 +2,13 @@
 
 Node::Node(Vector2 recPosition, float sizeRec)
 {
-    rectanglePosition = recPosition;
+    this->sizeRectangle = {sizeRec, sizeRec};
+    this->rectanglePosition = recPosition;
+
     speedRectangleX = 0.0f;
     speedRectangleY = 0.0f;
-    sizeRectangle = {sizeRec, sizeRec};
+
+    this->prox = nullptr;
 }
 
 Node::~Node()
@@ -48,8 +51,7 @@ Node* Node::getProx(){
     return prox;
 }
 
-void Node::setProx(Node *p){
+void Node::setProx(Node* p) {
     prox = p;
 }
-
 

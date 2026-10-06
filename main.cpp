@@ -1,6 +1,10 @@
 #include <iostream>
 #include <raylib.h>
+#include "rlgl.h"
+#include "raymath.h"
 #include "Node.h"
+#include "Snake.h"
+#include "Grid.hpp"
 
 using namespace std;
 
@@ -8,51 +12,61 @@ int main(void)
 {
     //Inicialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth  = 800;
+    const int screenHeight = 448;
+    const float oneSize    = 32.0f;
 
     int currentFPS = 60;
     SetTargetFPS(currentFPS);
 
-    Camera2D camera = {0};
+    Snake snake;
 
-    Node head({0,0}, 32.0f);
 
-    float timeMove     = 0.0f;
+    float timeMove         = 0.0f;
     float timeMoveInterval = 0.2f;
 
 
-
     InitWindow(screenWidth, screenHeight, "Snake Game - Pedro Borgerth");
+
+    Camera2D camera = {0};
+    camera.zoom = 1.0f;
 
     //Main Game loop
     while(WindowShouldClose() == false){
         // Update
         //----------------------------------------------------------------------------------
 
-        if(IsKeyDown(KEY_W)) {head.setSpeedY(-32.0f); head.setSpeedX(0.0f);}
-        if(IsKeyDown(KEY_A)) {head.setSpeedX(-32.0f); head.setSpeedY(0.0f);}
-        if(IsKeyDown(KEY_S)) {head.setSpeedY( 32.0f); head.setSpeedX(0.0f);}
-        if(IsKeyDown(KEY_D)) {head.setSpeedX( 32.0f); head.setSpeedY(0.0f);}
 
-        Vector2 currentPos = head.getPosition();
+        if(IsKeyDown(KEY_W)) {snake.getHead()->setSpeedY(-oneSize); snake.getHead()->setSpeedX(0);}
+        if(IsKeyDown(KEY_A)) {snake.getHead()->setSpeedX(-oneSize); snake.getHead()->setSpeedY(0);}
+        if(IsKeyDown(KEY_S)) {snake.getHead()->setSpeedY( oneSize); snake.getHead()->setSpeedX(0);}
+        if(IsKeyDown(KEY_D)) {snake.getHead()->setSpeedX( oneSize); snake.getHead()->setSpeedY(0);}
+
+
+        if(IsKeyPressed(KEY_R)) {snake.addNode();}
+
 
         timeMove += GetFrameTime();
 
         if(timeMove >= timeMoveInterval){
-            currentPos.x += head.getSpeedX();
-            currentPos.y += head.getSpeedY();
+            Vector2 prevPos = snake.getHead()->getPosition();
+
+            for(Node* i = snake.getHead(); i->getProx() != nullptr; i = i->getProx()){
+                Vector2 currentPos = i->getPosition();
+                i->setPosition(prevPos);
+                prevPos = currentPos;
+            }
+
+            Vector2 posHead = snake.getHead()->getPosition();
+
+            posHead.x += snake.getHead()->getSpeedX();
+            posHead.y += snake.getHead()->getSpeedY();
+            snake.getHead()->setPosition(posHead);
+
             timeMove -= timeMoveInterval;
         }
 
 
-        if(currentPos.x > screenWidth)  currentPos.x = 0.0f;
-        if(currentPos.x < 0)            currentPos.x = screenWidth - head.getSize().x;
-        if(currentPos.y > screenHeight) currentPos.y = 0.0f;
-        if(currentPos.y < 0)            currentPos.y = screenHeight - head.getSize().y;
-
-
-        head.setPosition(currentPos);
         //----------------------------------------------------------------------------------
 
 
@@ -61,13 +75,15 @@ int main(void)
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
-
-            DrawRectangleV(head.getPosition(), head.getSize(), GREEN);
-
             BeginMode2D(camera);
-                DrawGrid(100, 50);
-            EndMode2D();
 
+                DrawGrid2D(camera, screenWidth, screenHeight, oneSize, 1, BLACK);
+                for (Node* i = snake.getHead(); i != nullptr; i = i->getProx()) {
+                    Color color = (i == snake.getHead()) ? DARKGREEN : GREEN;
+                    DrawRectangleV(i->getPosition(), i->getSize(), color);
+                }
+
+            EndMode2D();
         EndDrawing();
     }
     CloseWindow();
