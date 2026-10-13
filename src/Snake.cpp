@@ -8,10 +8,14 @@ Snake::Snake()
     Vector2 initialPos = {11*oneSize, 6*oneSize};
     Node* newNode1 = new Node(initialPos, oneSize);
     headSnake = newNode1;
+    tailSnake = headSnake;
+    newNode1->setSpeedX(0);
+    newNode1->setSpeedY(-oneSize);
 
     Node* newNode2 = new Node({11*oneSize, 7*oneSize}, oneSize);
     tailSnake = newNode2;
     headSnake->setProx(tailSnake);
+
     sizeSnake = 2;
 
 }

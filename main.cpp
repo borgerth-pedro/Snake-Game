@@ -1,10 +1,14 @@
 #include <iostream>
 #include <raylib.h>
+#include <random>
 #include "rlgl.h"
 #include "raymath.h"
 #include "Node.h"
 #include "Snake.h"
 #include "Grid.hpp"
+#include "CheckCollisionSnake.hpp"
+#include "Apple.h"
+
 
 using namespace std;
 
@@ -12,14 +16,29 @@ int main(void)
 {
     //Inicialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth  = 800;
-    const int screenHeight = 448;
     const float oneSize    = 32.0f;
+    const int screenBlocksX = 25;
+    const int screenBlocksY = 14;
+    int screenSize = screenBlocksX * screenBlocksY;
+
+    const int screenWidth  = screenBlocksX*oneSize;
+    const int screenHeight = screenBlocksY*oneSize;
+
+
+
 
     int currentFPS = 60;
     SetTargetFPS(currentFPS);
 
+    random_device rd;
+    mt19937 gen(rd());
+    uniform_int_distribution<int> rtv(20, 30);
+    uniform_int_distribution<int> randPosX(0, screenBlocksX);
+    uniform_int_distribution<int> randPosY(0, screenBlocksY);
+
     Snake snake;
+    Apple vetApples[screenSize];
+    int apples = 0;
 
 
     float timeMove         = 0.0f;
@@ -67,6 +86,45 @@ int main(void)
         }
         if(IsKeyPressed(KEY_R)){snake.addNode();}
 
+
+
+
+        int randomTimeValue = rtv(gen);
+        if(timeMove >= randomTimeValue*timeMoveInterval){
+            //pegar posição aleatória dentro das delimitações do mapa; feito
+            Vector2 randomPosApple = {randPosX(gen),randPosY(gen)};
+            bool appleErroCollision = false;
+            do{
+                randomPosApple = {randPosX(gen),randPosY(gen)};
+
+                //checar se na posição já tem uma maça ou Snake;
+                for(Node* i = snake.getHead(); i->getProx() != nullptr; i = i->getProx()){
+                    if(CheckCollisionSnake(snake.getHead()->getPosition(), i->getProx()->getPosition())){
+                        appleErroCollision = true;
+                        break;
+                    }
+                }
+                for(int i = 0; i<screenSize; i++){
+                    if(CheckCollisionSnake(randomPosApple, vetApples[i].getPosition())){
+                        appleErroCollision = true;
+                        break;
+                    }
+                }
+            }while(appleErroCollision);
+
+            vetApples[apples] = Apple(randomPosApple);
+            apples++;
+                //se tiver, gera nova posição aleatoria e testa;
+                //se não tiver, gera maça;
+        }
+
+
+        bool snakeCollision = false;
+        for(Node* i = snake.getHead(); i->getProx() != nullptr; i = i->getProx()){
+            if(CheckCollisionSnake(snake.getHead()->getPosition(), i->getProx()->getPosition()))
+                snakeCollision = true;
+        }
+
         //----------------------------------------------------------------------------------
 
 
@@ -88,6 +146,12 @@ int main(void)
                         color = GREEN;
                     }
                     DrawRectangleV(i->getPosition(), i->getSize(), color);
+                }
+                if(snakeCollision == true){
+                    DrawText("Colisão detectada", 11*oneSize, 6*oneSize, 20, GRAY);
+                }
+                for(int i =0; i<screenSize; i++){
+                    DrawRectangleV(vetApples[i].getPosition(), {oneSize,oneSize}, YELLOW);
                 }
 
             EndMode2D();
