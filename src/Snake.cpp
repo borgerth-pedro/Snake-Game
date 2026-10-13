@@ -6,9 +6,14 @@ const float oneSize = 32.0f;
 Snake::Snake()
 {
     Vector2 initialPos = {11*oneSize, 6*oneSize};
-    headSnake = new Node(initialPos, oneSize);
-    tailSnake = headSnake;
-    sizeSnake = 1;
+    Node* newNode1 = new Node(initialPos, oneSize);
+    headSnake = newNode1;
+
+    Node* newNode2 = new Node({11*oneSize, 7*oneSize}, oneSize);
+    tailSnake = newNode2;
+    headSnake->setProx(tailSnake);
+    sizeSnake = 2;
+
 }
 
 Snake::~Snake()
@@ -30,18 +35,9 @@ int Snake::getSize(){
 }
 void Snake::addNode(){
 
-    if(headSnake == nullptr){
-
-        Node* newNode = new Node(tailSnake->getPosition(), tailSnake->getSize().x);
-        tailSnake->setProx(newNode);
-        tailSnake = newNode;
-    }else{
-        Vector2 newPos = {0.0f, 0.0f};
-        newPos = tailSnake->getPosition();
-        Node* newNode = new Node(newPos, tailSnake->getSize().x);
-        tailSnake->setProx(newNode);
-        tailSnake = newNode;
-    }
+    Node* newNode = new Node(tailSnake->getPosition(), tailSnake->getSize().x);
+    tailSnake->setProx(newNode);
+    tailSnake = newNode;
     sizeSnake++;
 }
 void Snake::removeNode(){
@@ -50,4 +46,8 @@ void Snake::removeNode(){
 
 Node* Snake::getHead(){
     return headSnake;
+}
+
+Node* Snake::getTail(){
+    return tailSnake;
 }

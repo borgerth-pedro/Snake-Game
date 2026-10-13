@@ -43,29 +43,29 @@ int main(void)
         if(IsKeyDown(KEY_D)) {snake.getHead()->setSpeedX( oneSize); snake.getHead()->setSpeedY(0);}
 
 
-        if(IsKeyPressed(KEY_R)) {snake.addNode();}
-
 
         timeMove += GetFrameTime();
 
+
         if(timeMove >= timeMoveInterval){
-            Vector2 prevPos = snake.getHead()->getPosition();
 
-            for(Node* i = snake.getHead(); i->getProx() != nullptr; i = i->getProx()){
-                Vector2 currentPos = i->getPosition();
-                i->setPosition(prevPos);
-                prevPos = currentPos;
-            }
+                Vector2 prevPos = snake.getHead()->getPosition();
 
-            Vector2 posHead = snake.getHead()->getPosition();
+                for(Node* i = snake.getHead(); i != nullptr; i = i->getProx()){
+                    Vector2 currentPos = i->getPosition();
+                    i->setPosition(prevPos);
+                    prevPos = currentPos;
+                }
 
-            posHead.x += snake.getHead()->getSpeedX();
-            posHead.y += snake.getHead()->getSpeedY();
-            snake.getHead()->setPosition(posHead);
+                Vector2 posHead = snake.getHead()->getPosition();
+                posHead.x += snake.getHead()->getSpeedX();
+                posHead.y += snake.getHead()->getSpeedY();
+                snake.getHead()->setPosition(posHead);
+
 
             timeMove -= timeMoveInterval;
         }
-
+        if(IsKeyPressed(KEY_R)){snake.addNode();}
 
         //----------------------------------------------------------------------------------
 
@@ -79,7 +79,14 @@ int main(void)
 
                 DrawGrid2D(camera, screenWidth, screenHeight, oneSize, 1, BLACK);
                 for (Node* i = snake.getHead(); i != nullptr; i = i->getProx()) {
-                    Color color = (i == snake.getHead()) ? DARKGREEN : GREEN;
+                    Color color;
+                    if(i == snake.getTail()){
+                        color = RED;
+                    }else if(i == snake.getHead()){
+                        color = DARKGREEN;
+                    }else{
+                        color = GREEN;
+                    }
                     DrawRectangleV(i->getPosition(), i->getSize(), color);
                 }
 

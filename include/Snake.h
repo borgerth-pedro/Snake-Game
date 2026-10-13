@@ -12,6 +12,7 @@ class Snake
         void addNode();
         void removeNode();
         Node* getHead();
+        Node* getTail();
 
     private:
         Node *headSnake = nullptr;
