@@ -37,13 +37,19 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="include/Apple.h" />
+		<Unit filename="include/CheckCollisionSnake.hpp" />
 		<Unit filename="include/Grid.hpp" />
 		<Unit filename="include/Node.h" />
 		<Unit filename="include/Snake.h" />
+		<Unit filename="include/VetApples.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Apple.cpp" />
+		<Unit filename="src/CheckCollisionSnake.cpp" />
 		<Unit filename="src/Grid.cpp" />
 		<Unit filename="src/Node.cpp" />
 		<Unit filename="src/Snake.cpp" />
+		<Unit filename="src/VetApples.cpp" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

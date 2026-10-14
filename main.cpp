@@ -8,6 +8,7 @@
 #include "Grid.hpp"
 #include "CheckCollisionSnake.hpp"
 #include "Apple.h"
+#include "VetApples.h"
 
 
 using namespace std;
@@ -33,16 +34,20 @@ int main(void)
     random_device rd;
     mt19937 gen(rd());
     uniform_int_distribution<int> rtv(20, 30);
-    uniform_int_distribution<int> randPosX(0, screenBlocksX);
-    uniform_int_distribution<int> randPosY(0, screenBlocksY);
+    uniform_int_distribution<int> randPosX(0, screenBlocksX - 1);
+    uniform_int_distribution<int> randPosY(0, screenBlocksY - 1);
 
     Snake snake;
-    Apple vetApples[screenSize];
-    int apples = 0;
+    const int maxApples = 5;
+    VetApples vetApples(maxApples);
 
 
-    float timeMove         = 0.0f;
-    float timeMoveInterval = 0.2f;
+    float timeMove          = 0.0f;
+    float timeMoveInterval  = 0.5f;
+    float timeApple         = 0.0f;
+    float timeBonusApple    = 0.0005f;
+    float timeBonusMovement = 0.0f;
+    float randowTimeApple   = rtv(gen) * timeMoveInterval;
 
 
     InitWindow(screenWidth, screenHeight, "Snake Game - Pedro Borgerth");
@@ -62,8 +67,9 @@ int main(void)
         if(IsKeyDown(KEY_D)) {snake.getHead()->setSpeedX( oneSize); snake.getHead()->setSpeedY(0);}
 
 
-
-        timeMove += GetFrameTime();
+        float deltaTime = GetFrameTime();
+        timeMove  += (deltaTime+timeBonusMovement);
+        timeApple += (deltaTime+timeBonusApple);
 
 
         if(timeMove >= timeMoveInterval){
@@ -87,35 +93,39 @@ int main(void)
         if(IsKeyPressed(KEY_R)){snake.addNode();}
 
 
+        if(timeApple >= randowTimeApple){
+            Vector2 randomPosApple;
+            bool appleErroCollision;
 
-
-        int randomTimeValue = rtv(gen);
-        if(timeMove >= randomTimeValue*timeMoveInterval){
-            //pegar posição aleatória dentro das delimitações do mapa; feito
-            Vector2 randomPosApple = {randPosX(gen),randPosY(gen)};
-            bool appleErroCollision = false;
             do{
-                randomPosApple = {randPosX(gen),randPosY(gen)};
+                appleErroCollision = false;
 
-                //checar se na posição já tem uma maça ou Snake;
-                for(Node* i = snake.getHead(); i->getProx() != nullptr; i = i->getProx()){
-                    if(CheckCollisionSnake(snake.getHead()->getPosition(), i->getProx()->getPosition())){
+                randomPosApple = {
+                    static_cast<float>(randPosX(gen) * (int)oneSize),
+                    static_cast<float>(randPosY(gen) * (int)oneSize)
+                };
+
+                for(Node* i = snake.getHead(); i != nullptr; i = i->getProx()){
+                    if(CheckCollisionSnake(randomPosApple, i->getPosition())){
                         appleErroCollision = true;
                         break;
                     }
                 }
-                for(int i = 0; i<screenSize; i++){
-                    if(CheckCollisionSnake(randomPosApple, vetApples[i].getPosition())){
-                        appleErroCollision = true;
-                        break;
+                if (!appleErroCollision){
+                    for(int i = 0; i<vetApples.getNumApples(); i++){
+                        if(CheckCollisionSnake(randomPosApple, vetApples.getApple(i).getPosition())){
+                            appleErroCollision = true;
+                            break;
+                        }
                     }
                 }
+
             }while(appleErroCollision);
 
-            vetApples[apples] = Apple(randomPosApple);
-            apples++;
-                //se tiver, gera nova posição aleatoria e testa;
-                //se não tiver, gera maça;
+            vetApples.addApple(randomPosApple);
+
+            timeApple = 0.0f;
+            randowTimeApple = rtv(gen) * timeMoveInterval;
         }
 
 
@@ -124,6 +134,25 @@ int main(void)
             if(CheckCollisionSnake(snake.getHead()->getPosition(), i->getProx()->getPosition()))
                 snakeCollision = true;
         }
+
+
+        bool snakeCollisionApple = false;
+        Vector2 appleEatPos = {-1, -1};
+        for(Node* i = snake.getHead(); i != nullptr; i = i->getProx()){
+            for(int j = 0; j<vetApples.getNumApples(); j++){
+                if(CheckCollisionSnake(i->getPosition(), vetApples.getApple(j).getPosition())){
+                    snakeCollisionApple = true;
+                    appleEatPos = vetApples.getApple(j).getPosition();
+                    break;
+                }
+            }
+        }
+        if(snakeCollisionApple){
+            snake.addNode();
+            vetApples.removeApple(appleEatPos);
+            timeBonusApple += 0.00025f;
+        }
+
 
         //----------------------------------------------------------------------------------
 
@@ -150,8 +179,8 @@ int main(void)
                 if(snakeCollision == true){
                     DrawText("Colisão detectada", 11*oneSize, 6*oneSize, 20, GRAY);
                 }
-                for(int i =0; i<screenSize; i++){
-                    DrawRectangleV(vetApples[i].getPosition(), {oneSize,oneSize}, YELLOW);
+                for(int i =0; i<vetApples.getNumApples(); i++){
+                    DrawRectangleV(vetApples.getApple(i).getPosition(), {oneSize,oneSize}, YELLOW);
                 }
 
             EndMode2D();
