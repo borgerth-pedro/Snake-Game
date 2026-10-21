@@ -16,6 +16,8 @@ class VetApples
         int getNumApples();
         Apple getApple(int inx);
 
+        void reset();
+
     private:
         int apples = 0;
         int maxApples = 0;

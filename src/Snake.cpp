@@ -1,11 +1,12 @@
 #include "Snake.h"
+#include <raylib.h>
 
 
 const float oneSize = 32.0f;
+const Vector2 initialPos = {11*oneSize, 6*oneSize};
 
 Snake::Snake()
 {
-    Vector2 initialPos = {11*oneSize, 6*oneSize};
     Node* newNode1 = new Node(initialPos, oneSize);
     headSnake = newNode1;
     tailSnake = headSnake;
@@ -45,7 +46,17 @@ void Snake::addNode(){
     sizeSnake++;
 }
 void Snake::removeNode(){
+    if(headSnake->getProx() == tailSnake){return;}
 
+    Node* i = headSnake;
+    while(i->getProx()->getProx() != tailSnake){i = i->getProx();}
+
+    Node* j = i->getProx();
+
+    i->setProx(tailSnake);
+    delete j;
+
+    sizeSnake --;
 }
 
 Node* Snake::getHead(){
@@ -54,4 +65,15 @@ Node* Snake::getHead(){
 
 Node* Snake::getTail(){
     return tailSnake;
+}
+
+void Snake::reset(){
+    while(sizeSnake != 2){
+        removeNode();
+    }
+
+    headSnake->setPosition(initialPos);
+    headSnake->setSpeedX(0);
+    headSnake->setSpeedY(-oneSize);
+
 }

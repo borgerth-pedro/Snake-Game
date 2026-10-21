@@ -52,3 +52,7 @@ int VetApples::getNumApples(){
 Apple VetApples::getApple(int inx){
     return vet[inx];
 }
+
+void VetApples::reset(){
+    apples = 0;
+}

@@ -41,13 +41,16 @@
 		<Unit filename="include/CheckCollisionSnake.hpp" />
 		<Unit filename="include/Grid.hpp" />
 		<Unit filename="include/Node.h" />
+		<Unit filename="include/ResetGame.hpp" />
 		<Unit filename="include/Snake.h" />
 		<Unit filename="include/VetApples.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="resources/gameOver.png" />
 		<Unit filename="src/Apple.cpp" />
 		<Unit filename="src/CheckCollisionSnake.cpp" />
 		<Unit filename="src/Grid.cpp" />
 		<Unit filename="src/Node.cpp" />
+		<Unit filename="src/ResetGame.cpp" />
 		<Unit filename="src/Snake.cpp" />
 		<Unit filename="src/VetApples.cpp" />
 		<Extensions />

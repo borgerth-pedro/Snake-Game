@@ -14,6 +14,8 @@ class Snake
         Node* getHead();
         Node* getTail();
 
+        void reset();
+
     private:
         Node *headSnake = nullptr;
         Node *tailSnake = nullptr;
